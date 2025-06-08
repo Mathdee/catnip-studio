@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catnip Studio - Game Development Notebook</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Caveat:wght@400;500;600;700&family=Amatic+SC:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Kalam', cursive;
+            background: #f7f5f3;
+            color: #2c3e50;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent 0px,
+                    transparent 27px,
+                    #3498db 27px,
+                    #3498db 29px,
+                    transparent 29px,
+                    transparent 56px
+                ),
+                linear-gradient(90deg, #e74c3c 0px, #e74c3c 2px, transparent 2px);
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Notebook margin */
+        .page-margin {
+            position: fixed;
+            left: 80px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e74c3c;
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(247, 245, 243, 0.95);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 2px dashed #3498db;
+            padding: 1rem 0;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-family: 'Caveat', cursive;
+            transform: rotate(-1deg);
+            text-shadow: 2px 2px 0px #fff;
+        }
+
+        .logo::before {
+            content: "";
+            width: 60px;
+            height: 60px;
+            background: white;
+            border: 3px solid #2c3e50;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(3deg);
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20 25 L35 15 L40 25 L60 25 L65 15 L80 25 L75 35 L25 35 Z" fill="%232c3e50" stroke="%232c3e50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 45 L35 40 M85 45 L65 40 M15 55 L30 50 M85 55 L70 50" stroke="%232c3e50" stroke-width="3" stroke-linecap="round"/><circle cx="35" cy="45" r="2.5" fill="%232c3e50"/><circle cx="65" cy="45" r="2.5" fill="%232c3e50"/><path d="M50 50 L50 55 M45 60 Q50 65 55 60" stroke="%232c3e50" stroke-width="2.5" stroke-linecap="round"/><path d="M25 70 Q50 85 75 70" stroke="%232c3e50" stroke-width="3" stroke-linecap="round" fill="none"/></svg>');
+            background-size: 70%;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            position: relative;
+            font-family: 'Caveat', cursive;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+        }
+
+        .nav-links a:hover {
+            background: #3498db;
+            color: white;
+            transform: rotate(-1deg) scale(1.05);
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 50px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            width: 200px;
+            height: 150px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 50%;
+            transform: rotate(15deg);
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 20%;
+            right: 15%;
+            width: 150px;
+            height: 150px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            transform: rotate(-20deg);
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease;
+            line-height: 1.1;
+            font-family: 'Amatic SC', cursive;
+            transform: rotate(-2deg);
+            text-shadow: 3px 3px 0px #fff;
+            position: relative;
+        }
+
+        .hero h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 20%;
+            right: 20%;
+            height: 8px;
+            background: #f1c40f;
+            opacity: 0.6;
+            transform: rotate(1deg);
+            border-radius: 4px;
+        }
+
+        .hero p {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: #34495e;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease 0.3s both;
+            font-family: 'Caveat', cursive;
+            transform: rotate(1deg);
+            line-height: 1.4;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 1.5rem 3rem;
+            text-decoration: none;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease 0.6s both;
+            font-family: 'Caveat', cursive;
+            border: 3px solid #2c3e50;
+            box-shadow: 5px 5px 0px #2c3e50;
+            transform: rotate(-1deg);
+        }
+
+        .cta-button:hover {
+            transform: rotate(1deg) scale(1.05);
+            background: #e74c3c;
+            box-shadow: 7px 7px 0px #2c3e50;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) rotate(-2deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotate(-2deg);
+            }
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 8rem 0;
+            position: relative;
+        }
+
+        .section:nth-child(even) {
+            background: rgba(52, 152, 219, 0.03);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-family: 'Amatic SC', cursive;
+            transform: rotate(-1deg);
+            text-shadow: 2px 2px 0px #fff;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 30%;
+            right: 30%;
+            height: 6px;
+            background: #e74c3c;
+            opacity: 0.6;
+            transform: rotate(1deg);
+            border-radius: 3px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-family: 'Caveat', cursive;
+            transform: rotate(0.5deg);
+        }
+
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .game-card {
+            background: white;
+            border: 3px solid #2c3e50;
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: left;
+            transition: all 0.4s ease;
+            box-shadow: 5px 5px 0px rgba(44, 62, 80, 0.1);
+            position: relative;
+            transform: rotate(-1deg);
+        }
+
+        .game-card:nth-child(even) {
+            transform: rotate(1deg);
+        }
+
+        .game-card:hover {
+            transform: rotate(0deg) scale(1.02);
+            box-shadow: 8px 8px 0px rgba(44, 62, 80, 0.2);
+            background: #f8f9fa;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 20px;
+            right: 20px;
+            height: 10px;
+            background: #f1c40f;
+            opacity: 0.3;
+            border-radius: 5px;
+            transform: rotate(-1deg);
+        }
+
+        .game-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.1));
+        }
+
+        .game-card h3 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-family: 'Amatic SC', cursive;
+            text-shadow: 1px 1px 0px #fff;
+        }
+
+        .game-card p {
+            color: #34495e;
+            line-height: 1.6;
+            font-weight: 400;
+            font-size: 1.1rem;
+            font-family: 'Kalam', cursive;
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .about-text {
+            color: #34495e;
+            font-size: 1.2rem;
+            font-weight: 400;
+            line-height: 1.8;
+            font-family: 'Kalam', cursive;
+        }
+
+        .about-text h3 {
+            color: #2c3e50;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-family: 'Amatic SC', cursive;
+            transform: rotate(-1deg);
+            text-shadow: 2px 2px 0px #fff;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 3px solid #2c3e50;
+            transition: all 0.3s ease;
+            box-shadow: 4px 4px 0px rgba(44, 62, 80, 0.1);
+            transform: rotate(-2deg);
+        }
+
+        .stat-item:nth-child(even) {
+            transform: rotate(2deg);
+        }
+
+        .stat-item:hover {
+            transform: rotate(0deg) scale(1.05);
+            background: #ecf0f1;
+            box-shadow: 6px 6px 0px rgba(44, 62, 80, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #e74c3c;
+            display: block;
+            font-family: 'Amatic SC', cursive;
+            text-shadow: 2px 2px 0px #fff;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-family: 'Caveat', cursive;
+            margin-top: 0.5rem;
+        }
+
+        /* Contact Section */
+        .contact-content {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-intro {
+            color: #34495e;
+            font-size: 1.6rem;
+            margin-bottom: 3rem;
+            font-family: 'Caveat', cursive;
+            transform: rotate(-0.5deg);
+            line-height: 1.5;
+        }
+
+        .contact-form {
+            background: white;
+            border: 3px solid #2c3e50;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+            box-shadow: 6px 6px 0px rgba(44, 62, 80, 0.1);
+            transform: rotate(1deg);
+            position: relative;
+        }
+
+        .contact-form::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 30px;
+            right: 30px;
+            height: 15px;
+            background: #3498db;
+            opacity: 0.3;
+            border-radius: 8px;
+            transform: rotate(-1deg);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            font-size: 1.2rem;
+            font-family: 'Caveat', cursive;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1.2rem;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            background: #f8f9fa;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            font-family: 'Kalam', cursive;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 3px 3px 0px rgba(52, 152, 219, 0.2);
+            transform: rotate(-0.5deg);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            padding: 4rem 0;
+            text-align: center;
+            color: #ecf0f1;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    #3498db 0px,
+                    #3498db 10px,
+                    #e74c3c 10px,
+                    #e74c3c 20px,
+                    #f1c40f 20px,
+                    #f1c40f 30px
+                );
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            background: white;
+            color: #2c3e50;
+            border: 3px solid #ecf0f1;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+            transform: rotate(-5deg);
+        }
+
+        .social-links a:nth-child(even) {
+            transform: rotate(5deg);
+        }
+
+        .social-links a:hover {
+            background: #3498db;
+            color: white;
+            transform: rotate(0deg) scale(1.1);
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.3);
+        }
+
+        .footer p {
+            font-family: 'Caveat', cursive;
+            font-size: 1.3rem;
+            transform: rotate(-1deg);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+            .hero p {
+                font-size: 1.4rem;
+            }
+
+            .section-title {
+                font-size: 3rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation for elements when they come into view */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px) rotate(-2deg);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0) rotate(-1deg);
+        }
+
+        /* Doodles and sketches */
+        .doodle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .doodle-star {
+            top: 15%;
+            right: 10%;
+            font-size: 2rem;
+            color: #f1c40f;
+            transform: rotate(15deg);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .doodle-heart {
+            bottom: 20%;
+            left: 8%;
+            font-size: 1.5rem;
+            color: #e74c3c;
+            transform: rotate(-10deg);
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(15deg); }
+            50% { transform: translateY(-20px) rotate(15deg); }
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            background: #2980b9;
+            box-shadow: 0 8px 30px rgba(52, 152, 219, 0.6);
+        }
+
+        .back-to-top::before {
+            content: "↑";
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Notebook margin line -->
+        <div class="page-margin"></div>
+
+        <!-- Floating doodles -->
+        <div class="doodle doodle-star">⭐</div>
+        <div class="doodle doodle-heart">💙</div>
+
+        <!-- Header -->
+        <header class="header">
+            <nav class="nav container">
+                <a href="#" class="logo">Catnip Studio</a>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#games">Games</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Sketching Dreams into Games! 🎮</h1>
+                <p>Creating pawsome games that bring joy and excitement to players worldwide - one sketch at a time!</p>
+                <a href="#games" class="cta-button">Explore Our Games 🐱</a>
+            </div>
+        </section>
+
+        <!-- Games Section -->
+        <section id="games" class="section">
+            <div class="container">
+                <h2 class="section-title">Our Game Collection</h2>
+                <p class="section-subtitle">Sketched with love, coded with passion</p>
+                <div class="games-grid">
+                    <div class="game-card fade-in">
+                        <span class="game-icon">🐱</span>
+                        <h3>Kitty Adventures</h3>
+                        <p>Join adorable cats on epic quests! Explore magical worlds, solve puzzles, and collect fish treats in this purr-fect platformer adventure that feels like it jumped right out of a sketchbook.</p>
+                    </div>
+                    <div class="game-card fade-in">
+                        <span class="game-icon">🏠</span>
+                        <h3>Cat Café Chronicles</h3>
+                        <p>Run the coziest cat café in town! Serve delicious treats, take care of fluffy cats, and create the perfect atmosphere for cat lovers in this hand-drawn simulation.</p>
+                    </div>
+                    <div class="game-card fade-in">
+                        <span class="game-icon">🧶</span>
+                        <h3>Yarn Ball Puzzle</h3>
+                        <p>Help playful kittens untangle colorful yarn balls! Solve increasingly challenging puzzles in this relaxing and adorable brain teaser with sketchy, notebook-style graphics.</p>
+                    </div>
+                    <div class="game-card fade-in">
+                        <span class="game-icon">🌙</span>
+                        <h3>Midnight Cat Tales</h3>
+                        <p>Embark on mysterious nighttime adventures with brave cats! Explore moonlit gardens and discover magical secrets hidden in the shadows of our doodle-style world.</p>
+                    </div>
+                    <div class="game-card fade-in">
+                        <span class="game-icon">🎨</span>
+                        <h3>Cat Creator Studio</h3>
+                        <p>Design and customize your dream cats! Mix and match colors, patterns, and accessories to create the most adorable feline friends in our digital sketchbook.</p>
+                    </div>
+                    <div class="game-card fade-in">
+                        <span class="game-icon">🏆</span>
+                        <h3>Cat Racing Championship</h3>
+                        <p>Race with speedy cats through obstacle courses! Jump, dash, and collect power-ups in this fast-paced and fun racing adventure with hand-drawn charm.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="container">
+                <h2 class="section-title">Our Story</h2>
+                <p class="section-subtitle">Scribbled dreams turned into digital reality</p>
+                <div class="about-content">
+                    <div class="about-text fade-in">
+                        <h3>Our Purr-pose</h3>
+                        <p>At Catnip Studio, we believe games should feel like they were lovingly sketched in your favorite notebook. We specialize in creating cute, cat-themed experiences that bring warmth and happiness to players of all ages.</p>
+                        <p>Our team is passionate about crafting games that look like beautiful doodles come to life. Every whisker is drawn with love, every purr is perfectly tuned, and every interaction feels like you're playing inside someone's creative journal.</p>
+                    </div>
+                    <div class="stats fade-in">
+                        <div class="stat-item">
+                            <span class="stat-number">{{ downloads }}</span>
+                            <span class="stat-label">Happy Cat Lovers</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">{{ games }}</span>
+                            <span class="stat-label">Sketch-Style Games</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">{{ players }}</span>
+                            <span class="stat-label">Virtual Cats Adopted</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">{{ rating }}</span>
+                            <span class="stat-label">Purr Rating</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <div class="container">
+                <div class="contact-content">
+                    <h2 class="section-title">Get in Touch</h2>
+                    <p class="contact-intro">
+                        Have a cat-tastic game idea? Want to collaborate on something a-mew-zing? Or just want to doodle some cats with us? We'd love to hear from you!
+                    </p>
+                    <div class="contact-form fade-in">
+                        <form @submit.prevent="submitForm">
+                            <div class="form-group">
+                                <label for="name">Your Name</label>
+                                <input type="text" id="name" v-model="form.name" required placeholder="Write your name here...">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" v-model="form.email" required placeholder="your@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <input type="text" id="subject" v-model="form.subject" required placeholder="What's this about?">
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Your Message</label>
+                                <textarea id="message" v-model="form.message" required placeholder="Tell us your ideas, dreams, or just say meow!"></textarea>
+                            </div>
+                            <button type="submit" class="cta-button">Send Message 🐾</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="social-links">
+                    <a href="#" title="Twitter">🐦</a>
+                    <a href="#" title="Instagram">📷</a>
+                    <a href="#" title="Discord">💬</a>
+                    <a href="#" title="YouTube">📺</a>
+                    <a href="#" title="TikTok">🎵</a>
+                </div>
+                <p>&copy; 2025 Catnip Studio. Sketched with 💙 and lots of cat treats for feline lovers everywhere.</p>
+            </div>
+        </footer>
+
+        <!-- Back to Top Button -->
+        <div class="back-to-top" @click="scrollToTop" :class="{ visible: showBackToTop }">
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    downloads: '500K+',
+                    games: '9',
+                    players: '1M+',
+                    rating: '4.9★',
+                    showBackToTop: false,
+                    form: {
+                        name: '',
+                        email: '',
+                        subject: '',
+                        message: ''
+                    }
+                }
+            },
+            methods: {
+                submitForm() {
+                    // Handle form submission
+                    alert('Thank you for your message! We\'ll sketch back a reply faster than a cat chasing a laser pointer! 🐱✨');
+                    // Reset form
+                    this.form = {
+                        name: '',
+                        email: '',
+                        subject: '',
+                        message: ''
+                    };
+                },
+                handleScroll() {
+                    const elements = document.querySelectorAll('.fade-in');
+                    elements.forEach(element => {
+                        const elementTop = element.getBoundingClientRect().top;
+                        const elementVisible = 150;
+                        
+                        if (elementTop < window.innerHeight - elementVisible) {
+                            element.classList.add('visible');
+                        }
+                    });
+
+                    // Show/hide back to top button
+                    this.showBackToTop = window.scrollY > 300;
+                },
+                scrollToTop() {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
+            },
+            mounted() {
+                // Smooth scrolling for navigation links
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const target = document.querySelector(this.getAttribute('href'));
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    });
+                });
+
+                // Scroll animations
+                window.addEventListener('scroll', this.handleScroll);
+                this.handleScroll(); // Initial check
+
+                // Add random doodles dynamically
+                const doodles = ['✨', '🌟', '💫', '🎨', '📝', '✏️', '🖍️'];
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        const doodle = document.createElement('div');
+                        doodle.className = 'doodle';
+                        doodle.innerHTML = doodles[Math.floor(Math.random() * doodles.length)];
+                        doodle.style.position = 'absolute';
+                        doodle.style.left = Math.random() * 90 + '%';
+                        doodle.style.top = Math.random() * 80 + 20 + '%';
+                        doodle.style.fontSize = Math.random() * 1 + 1 + 'rem';
+                        doodle.style.color = ['#3498db', '#e74c3c', '#f1c40f', '#2ecc71'][Math.floor(Math.random() * 4)];
+                        doodle.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
+                        doodle.style.animation = `float ${Math.random() * 4 + 6}s ease-in-out infinite`;
+                        doodle.style.animationDelay = Math.random() * 2 + 's';
+                        document.body.appendChild(doodle);
+                    }, i * 1000);
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
