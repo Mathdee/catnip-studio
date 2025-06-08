@@ -97,16 +97,6 @@
             animation: logoWiggle 3s ease-in-out infinite;
         }
 
-        /* Dark mode support for logo */
-        @media (prefers-color-scheme: dark) {
-            .hero-logo img {
-                filter: brightness(0) invert(1) drop-shadow(4px 4px 8px rgba(255,255,255,0.15));
-            }
-            
-            .hero-logo img:hover {
-                filter: brightness(0) invert(1) drop-shadow(6px 6px 12px rgba(255,255,255,0.25));
-            }
-        }
 
         .hero-logo img:hover {
             animation-play-state: paused;
