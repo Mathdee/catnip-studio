@@ -63,49 +63,6 @@
             z-index: -1;
         }
 
-        /* Header */
-        .header {
-            background: rgba(247, 245, 243, 0.95);
-            backdrop-filter: blur(10px);
-            position: relative;
-            z-index: 1000;
-            transition: all 0.3s ease;
-            border-bottom: 2px dashed #3498db;
-            padding: 1rem 0;
-        }
-
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0;
-        }
-        
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #2c3e50;
-            font-weight: 500;
-            font-size: 1.3rem;
-            transition: all 0.3s ease;
-            position: relative;
-            font-family: 'Caveat', cursive;
-            padding: 0.5rem 1rem;
-            border-radius: 10px;
-        }
-
-        .nav-links a:hover {
-            background: #3498db;
-            color: white;
-            transform: rotate(-1deg) scale(1.05);
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
-        }
-
         /* Hero Section */
         .hero {
             min-height: 100vh;
@@ -123,24 +80,25 @@
             z-index: 2;
             max-width: 900px;
         }
-        .logo-image {
+
+        .hero-logo {
+            margin-bottom: 3rem;
             display: flex;
-            align-items: center;
-            text-decoration: none;
-            transition: all 0.3s ease;
+            justify-content: center;
+            animation: fadeInUp 0.8s ease;
         }
 
-        .logo-img {
-            width: 100px;
-            height: 100px;
+        .hero-logo img {
+            width: 180px;
+            height: 180px;
             object-fit: contain;
+            filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.15));
             transition: all 0.3s ease;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
         }
 
-        .logo-image:hover .logo-img {
-            transform: rotate(-2deg) scale(1.05);
-            filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.2));
+        .hero-logo img:hover {
+            transform: rotate(-3deg) scale(1.05);
+            filter: drop-shadow(6px 6px 12px rgba(0,0,0,0.25));
         }
 
         .hero::before {
@@ -174,7 +132,7 @@
             font-weight: 700;
             color: #2c3e50;
             margin-bottom: 2rem;
-            animation: fadeInUp 1s ease;
+            animation: fadeInUp 1s ease 0.2s both;
             line-height: 1.1;
             font-family: 'Amatic SC', cursive;
             transform: rotate(-2deg);
@@ -200,7 +158,7 @@
             font-weight: 400;
             color: #34495e;
             margin-bottom: 3rem;
-            animation: fadeInUp 1s ease 0.3s both;
+            animation: fadeInUp 1s ease 0.4s both;
             font-family: 'Caveat', cursive;
             transform: rotate(1deg);
             line-height: 1.4;
@@ -576,16 +534,17 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
             .hero h1 {
                 font-size: 3.5rem;
             }
 
             .hero p {
                 font-size: 1.4rem;
+            }
+
+            .hero-logo img {
+                width: 120px;
+                height: 120px;
             }
 
             .section-title {
@@ -699,27 +658,15 @@
         <div class="doodle doodle-star">⭐</div>
         <div class="doodle doodle-heart">💙</div>
 
-        <!-- Header -->
-        <header class="header">
-            <nav class="nav container">
-                    <a href="#home" class="logo-image">
-                        <img src="https://github.com/Mathdee/catnip-studio/blob/main/Catnip-logo.png?raw=true" alt="Catnip Studio" class="logo-img">
-                    </a>                
-                    <ul class="nav-links">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#games">Games</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-        </header>
-
         <!-- Hero Section -->
         <section id="home" class="hero">
             <div class="hero-content">
-                <h1>Sketching Dreams into Games!</h1>
-                <p>Creating pawsome games that bring joy and excitement to players worldwide - one sketch at a time!</p>
-                <a href="#games" class="cta-button">Explore Our Games 🐱</a>
+                <div class="hero-logo">
+                    <img src="https://github.com/Mathdee/catnip-studio/blob/main/Catnip-logo.png?raw=true" alt="Catnip Studio">
+                </div>
+                <h1>Sketching Dreams into Games! 🎮</h1>
+                <p>Creating amazing games that bring joy and excitement to players worldwide - one sketch at a time!</p>
+                <a href="#games" class="cta-button">Explore Our Games 🎮</a>
             </div>
         </section>
 
@@ -730,34 +677,34 @@
                 <p class="section-subtitle">Sketched with love, coded with passion</p>
                 <div class="games-grid">
                     <div class="game-card fade-in">
-                        <span class="game-icon">🐱</span>
-                        <h3>Kitty Adventures</h3>
-                        <p>Join adorable cats on epic quests! Explore magical worlds, solve puzzles, and collect fish treats in this purr-fect platformer adventure that feels like it jumped right out of a sketchbook.</p>
+                        <span class="game-icon">🎮</span>
+                        <h3>Pixel Adventures</h3>
+                        <p>Jump into colorful retro worlds filled with challenging platforming, hidden secrets, and adorable characters that feel like they jumped right out of a sketchbook.</p>
                     </div>
                     <div class="game-card fade-in">
                         <span class="game-icon">🏠</span>
-                        <h3>Cat Café Chronicles</h3>
-                        <p>Run the coziest cat café in town! Serve delicious treats, take care of fluffy cats, and create the perfect atmosphere for cat lovers in this hand-drawn simulation.</p>
+                        <h3>Cozy Café Chronicles</h3>
+                        <p>Run the coziest café in town! Serve delicious treats, create the perfect atmosphere for customers, and build your dream business in this hand-drawn simulation.</p>
                     </div>
                     <div class="game-card fade-in">
-                        <span class="game-icon">🧶</span>
-                        <h3>Yarn Ball Puzzle</h3>
-                        <p>Help playful kittens untangle colorful yarn balls! Solve increasingly challenging puzzles in this relaxing and adorable brain teaser with sketchy, notebook-style graphics.</p>
+                        <span class="game-icon">🧩</span>
+                        <h3>Mind Bender Puzzles</h3>
+                        <p>Challenge your brain with increasingly complex puzzles! Solve mind-bending challenges in this relaxing yet stimulating brain teaser with sketchy, notebook-style graphics.</p>
                     </div>
                     <div class="game-card fade-in">
                         <span class="game-icon">🌙</span>
-                        <h3>Midnight Cat Tales</h3>
-                        <p>Embark on mysterious nighttime adventures with brave cats! Explore moonlit gardens and discover magical secrets hidden in the shadows of our doodle-style world.</p>
+                        <h3>Midnight Tales</h3>
+                        <p>Embark on mysterious nighttime adventures! Explore moonlit landscapes and discover magical secrets hidden in the shadows of our beautifully doodle-style world.</p>
                     </div>
                     <div class="game-card fade-in">
                         <span class="game-icon">🎨</span>
-                        <h3>Cat Creator Studio</h3>
-                        <p>Design and customize your dream cats! Mix and match colors, patterns, and accessories to create the most adorable feline friends in our digital sketchbook.</p>
+                        <h3>Character Creator Studio</h3>
+                        <p>Design and customize your dream characters! Mix and match colors, patterns, and accessories to create the most unique heroes and companions in our digital sketchbook.</p>
                     </div>
                     <div class="game-card fade-in">
                         <span class="game-icon">🏆</span>
-                        <h3>Cat Racing Championship</h3>
-                        <p>Race with speedy cats through obstacle courses! Jump, dash, and collect power-ups in this fast-paced and fun racing adventure with hand-drawn charm.</p>
+                        <h3>Speed Racing Championship</h3>
+                        <p>Race through exciting obstacle courses! Jump, dash, and collect power-ups in this fast-paced and fun racing adventure with hand-drawn charm and style.</p>
                     </div>
                 </div>
             </div>
@@ -770,14 +717,14 @@
                 <p class="section-subtitle">Scribbled dreams turned into digital reality</p>
                 <div class="about-content">
                     <div class="about-text fade-in">
-                        <h3>Our Purr-pose</h3>
-                        <p>At Catnip Studio, we believe games should feel like they were lovingly sketched in your favorite notebook. We specialize in creating cute, cat-themed experiences that bring warmth and happiness to players of all ages.</p>
-                        <p>Our team is passionate about crafting games that look like beautiful doodles come to life. Every whisker is drawn with love, every purr is perfectly tuned, and every interaction feels like you're playing inside someone's creative journal.</p>
+                        <h3>Our Purpose</h3>
+                        <p>At Catnip Studio, we believe games should feel like they were lovingly sketched in your favorite notebook. We specialize in creating engaging experiences across all genres that bring joy and excitement to players of all ages.</p>
+                        <p>Our team is passionate about crafting games that look like beautiful doodles come to life. Every detail is drawn with love, every sound is perfectly tuned, and every interaction feels like you're playing inside someone's creative journal.</p>
                     </div>
                     <div class="stats fade-in">
                         <div class="stat-item">
                             <span class="stat-number">{{ downloads }}</span>
-                            <span class="stat-label">Happy Cat Lovers</span>
+                            <span class="stat-label">Happy Players</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-number">{{ games }}</span>
@@ -785,11 +732,11 @@
                         </div>
                         <div class="stat-item">
                             <span class="stat-number">{{ players }}</span>
-                            <span class="stat-label">Virtual Cats Adopted</span>
+                            <span class="stat-label">Adventures Created</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-number">{{ rating }}</span>
-                            <span class="stat-label">Purr Rating</span>
+                            <span class="stat-label">Player Rating</span>
                         </div>
                     </div>
                 </div>
@@ -802,7 +749,7 @@
                 <div class="contact-content">
                     <h2 class="section-title">Get in Touch</h2>
                     <p class="contact-intro">
-                        Have a cat-tastic game idea? Want to collaborate on something a-mew-zing? Or just want to doodle some cats with us? We'd love to hear from you!
+                        Have an amazing game idea? Want to collaborate on something incredible? Or just want to doodle some concepts with us? We'd love to hear from you!
                     </p>
                     <div class="contact-form fade-in">
                         <form @submit.prevent="submitForm">
@@ -820,9 +767,9 @@
                             </div>
                             <div class="form-group">
                                 <label for="message">Your Message</label>
-                                <textarea id="message" v-model="form.message" required placeholder="Tell us your ideas, dreams, or just say meow!"></textarea>
+                                <textarea id="message" v-model="form.message" required placeholder="Tell us your ideas, dreams, or just say hello!"></textarea>
                             </div>
-                            <button type="submit" class="cta-button">Send Message 🐾</button>
+                            <button type="submit" class="cta-button">Send Message 🎮</button>
                         </form>
                     </div>
                 </div>
@@ -839,7 +786,7 @@
                     <a href="#" title="YouTube">📺</a>
                     <a href="#" title="TikTok">🎵</a>
                 </div>
-                <p>&copy; 2025 Catnip Studio. Sketched with 💙 and lots of cat treats for feline lovers everywhere.</p>
+                <p>&copy; 2025 Catnip Studio. Sketched with 💙 and lots of creativity for game lovers everywhere.</p>
             </div>
         </footer>
 
@@ -870,7 +817,7 @@
             methods: {
                 submitForm() {
                     // Handle form submission
-                    alert('Thank you for your message! We\'ll sketch back a reply faster than a cat chasing a laser pointer! 🐱✨');
+                    alert('Thank you for your message! We\'ll sketch back a reply faster than you can say "game on!" 🎮✨');
                     // Reset form
                     this.form = {
                         name: '',
